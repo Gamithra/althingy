@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 from urllib2 import urlopen
+import pickle
 from bs4 import BeautifulSoup
 
 ##TODO: refactoring
@@ -54,13 +55,11 @@ def data():
         for link in mp['speechLinks']:
             page = urlopen(speechUrlTemplate + link)
             soup = BeautifulSoup(page)
-            contents = soup.body.find('div', attrs={'id'="raeda_efni"}).text
+            contents = soup.body.find('div', attrs={'id': "raeda_efni"}).text
             mp['speeches'].append(contents)
-
-    print(mpInfo[1])
+    
 
 if __name__ == "__main__":
     data()
-    mpNames = names
-    with open("mp-names.txt", "w") as f:
-        f.write(mpNames.encode('utf-8'))
+    with open("mpInfo.pkl", 'wb') as f:
+        pickle.dump(mpInfo, f, pickle.HIGHEST_PROTOCOL)
