@@ -49,9 +49,15 @@ def data():
             if "raeda" in newLink:
                 mp['speechLinks'].append(newLink)
     
-    
+        speechUrlTemplate = "https://www.althingi.is"
+        mp['speeches'] = []
+        for link in mp['speechLinks']:
+            page = urlopen(speechUrlTemplate + link)
+            soup = BeautifulSoup(page)
+            contents = soup.body.find('div', attrs={'id'="raeda_efni"}).text
+            mp['speeches'].append(contents)
+
     print(mpInfo[1])
-    print(mpInfo[2])
 
 if __name__ == "__main__":
     data()
