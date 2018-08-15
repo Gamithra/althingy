@@ -18,7 +18,7 @@ def data():
         page = urlopen("https://www.althingi.is/altext/cv/is/raedur?lthing=148")
     except: 
         return "neibb 1"
-    soup = BeautifulSoup(page)
+    soup = BeautifulSoup(page, "lxml")
     contents = soup.body.find('div', attrs={'class': "article box news"})
     names = contents.text.split("\n")
     mp = dict()
@@ -36,29 +36,29 @@ def data():
             mpInfo[linkIndex]['link'] = link.get('href')
             linkIndex += 1
         except: pass
-    
+    print ("got names") 
     urlTemplate = "https://www.althingi.is/altext/cv/is/raedur"
 
     for key in mpInfo:
         mp = mpInfo[key]
         page = urlopen(urlTemplate + mp['link'])
-        soup = BeautifulSoup(page)
+        soup = BeautifulSoup(page, "lxml")
         contents = soup.body.find('div', attrs={'class': "article box news"})
         mp['speechLinks'] = []
         for link in contents.find_all('a'):
             newLink = link.get('href')
             if "raeda" in newLink:
                 mp['speechLinks'].append(newLink)
-    
+        print("got speech links for MP number " + str(key)) 
         speechUrlTemplate = "https://www.althingi.is"
         mp['speeches'] = []
         for link in mp['speechLinks']:
             page = urlopen(speechUrlTemplate + link)
-            soup = BeautifulSoup(page)
+            soup = BeautifulSoup(page, "lxml")
             contents = soup.body.find('div', attrs={'id': "raeda_efni"}).text
             mp['speeches'].append(contents)
+        print("done with MP number " + str(key)) 
     
-
 if __name__ == "__main__":
     data()
     with open("mpInfo.pkl", 'wb') as f:
