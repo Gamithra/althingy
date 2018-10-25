@@ -9,7 +9,7 @@ import copy
 # TODO: get utf-8 decoding right
 #       output data in human readable form
 #       calculate things like occurrences of "ég", "við", ..
-#       fetch data for speech lengths and divide by words/characters said        
+#       fetch data for speech lengths and divide by words/characters said
 #       get numbers our as well
 #       sort people based on parties
 
@@ -24,9 +24,7 @@ with open("mpInfo.pkl", 'rb') as f:
 
 
 def cleanText(speech):
-    #text = copy.deepcopy(speech)
     text = speech.encode('utf-8')
-    #text = str(speech)
     for character in junkCharacters:
         text = text.replace(character, " ")
     text = text.split(" ")
@@ -41,29 +39,31 @@ if __name__ == "__main__":
         totalSum = 0
         totalLength = 0
         totalMe = 0
-        for speech in mp['speeches']: 
+        for speech in mp['speeches']:
             lengths = [len(x.decode('utf-8')) for x in cleanText(speech)]
             totalSum += sum(lengths)
             totalLength += len(lengths)
-            
+
             upperText = [x.decode('utf-8').upper() for x in cleanText(speech)]
             meCount = upperText.count("ég".decode('utf-8').upper())
             totalMe += meCount
-            
+
         mp['totalWords'] = totalLength
 
         mp['averageLength'] = totalSum/totalLength
         averageResults.append([str(mp['averageLength']), mp['name']])
-       
+
         try: mp['modeLength'] = statistics.mode(lengths)
         except: mp['modeLength'] = -1
         modeResults.append([str(mp['modeLength']), mp['name']])
-        
+
         mp['medianLength'] = statistics.median(lengths)
         medianResults.append([str(mp['medianLength']), mp['name']])
-   
+
         mp['meCount'] = totalMe
         meResults.append([mp['meCount'], mp['name'], mp['meCount']/mp['totalWords']*100])
+
+
 
     averageResults = list(reversed(sorted(averageResults)))
     modeResults = list(reversed(sorted(modeResults)))
