@@ -49,7 +49,7 @@ def data():
             newLink = link.get('href')
             if "raeda" in newLink:
                 mp['speechLinks'].append(newLink)
-    
+        print("got speech links for MP number " + str(key)) 
         speechUrlTemplate = "https://www.althingi.is"
         mp['speeches'] = []
         for link in mp['speechLinks']:
