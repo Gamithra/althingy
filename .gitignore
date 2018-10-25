@@ -1,3 +1,4 @@
 *~
+*.py~
 *old.py
 __pycache__/
